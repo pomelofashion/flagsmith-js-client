@@ -30,7 +30,6 @@ jobs:
           tag-prefix: 'v'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          PACKAGEJSON_DIR: 'lib/flagsmith/package.json'
 
       - name: 'cat package.json'
         run: cat ./lib/flagsmith/package.json
