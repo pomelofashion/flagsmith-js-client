@@ -175,6 +175,7 @@ const Flagsmith = class {
                 }))
             :
                 this.getJSON(api + 'identities/?identifier=' + encodeURIComponent(identity)),
+
             ])
                 .then((res) => {
                     this.withTraits = null
@@ -300,6 +301,7 @@ const Flagsmith = class {
         eventSourceUrl= "https://realtime.flagsmith.com/",
         AsyncStorage: _AsyncStorage,
         identity,
+        getFlagWithProxy = false,
         traits,
         _trigger,
         state,
@@ -363,6 +365,7 @@ const Flagsmith = class {
                 enableLogs,
                 enableAnalytics,
                 AsyncStorage,
+                getFlagWithProxy,
                 identity,
                 traits,
                 _trigger,
