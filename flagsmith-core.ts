@@ -171,7 +171,8 @@ const Flagsmith = class {
                     traits: Object.keys(this.withTraits).map((k)=>({
                         "trait_key":k,
                         "trait_value": this.withTraits![k]
-                    }))
+                    })),
+                    "isFetchFlagsWithProxy": isFetchFlagsWithProxy ? true : false,
                 }))
             :
                 this.getJSON(api + 'identities/?identifier=' + encodeURIComponent(identity)),
@@ -196,7 +197,8 @@ const Flagsmith = class {
                     traits: Object.keys(this.withTraits).map((k)=>({
                         "trait_key":k,
                         "trait_value": this.withTraits![k]
-                    }))
+                    })),
+                    "isFetchFlagsWithProxy": isFetchFlagsWithProxy ? true : false,
                 }))
             :
                 this.getJSON(apiProxy + 'identities/?demo'),
