@@ -36,6 +36,7 @@ declare type ICacheOptions = {
 export interface IInitConfig<F extends string = string, T extends string = string> {
     AsyncStorage?: any;
     api?: string;
+    apiProxy? : string;
     cacheFlags?: boolean;
     cacheOptions?: ICacheOptions;
     defaultFlags?: IFlags<F>;
@@ -49,6 +50,7 @@ export interface IInitConfig<F extends string = string, T extends string = strin
     environmentID: string;
     headers?: object;
     identity?: string;
+    getFlagWithProxy?: boolean;
     traits?: ITraits<T>;
     onChange?: (previousFlags: IFlags<F> | null, params: IRetrieveInfo) => void;
     onError?: (err: Error) => void;
