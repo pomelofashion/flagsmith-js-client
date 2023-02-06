@@ -96,7 +96,7 @@ const Flagsmith = class {
     };
 
     getFlags = (resolve?:(v?:any)=>any, reject?:(v?:any)=>any) => {
-        const { onChange, onError, identity, api } = this;
+        const { onChange, onError, identity, api, apiProxy } = this;
         let resolved = false;
         this.log("Get Flags")
 
@@ -162,20 +162,17 @@ const Flagsmith = class {
 
         if (identity && !this.getFlagWithProxy) {
             return Promise.all([
-                this.withTraits ?
                     this.getJSON(api + 'identities/', "POST", JSON.stringify({
                         "identifier": identity,
-                        traits: Object.keys(this.withTraits).map((k)=>({
+                        traits: Object.keys(!!this.withTraits).map((k)=>({
                             "trait_key":k,
                             "trait_value": this.withTraits![k]
                         }))
                     }))
-                :
-                    this.getJSON(api + 'identities/?identifier=' + encodeURIComponent(identity)),
             ])
                 .then((res) => {
                     handleResponse(res[0] as IFlagsmithResponse)
-                    this.getFlagWithProxy = true
+                    this.getFlagWithProxy = true;
 
                     if (resolve && !resolved) {
                         resolved = true;
@@ -186,7 +183,7 @@ const Flagsmith = class {
                 });
         } else if (this.getFlagWithProxy) {
             return Promise.all([
-                this.getJSON(this.apiProxy + 'identities/', "POST", JSON.stringify({
+                this.getJSON(apiProxy + 'identities/', "POST", JSON.stringify({
                     "identifier": identity,
                     traits: Object.keys(!!this.withTraits).map((k)=>({
                         "trait_key":k,
@@ -278,6 +275,7 @@ const Flagsmith = class {
     init({
         environmentID,
         api = defaultAPI,
+        apiProxy,
         headers,
         onChange,
         cacheFlags,
@@ -292,6 +290,7 @@ const Flagsmith = class {
         eventSourceUrl= "https://realtime.flagsmith.com/",
         AsyncStorage: _AsyncStorage,
         identity,
+        getFlagWithProxy = false,
         traits,
         _trigger,
         state,
@@ -345,6 +344,7 @@ const Flagsmith = class {
             this.log("Initialising with properties",{
                 environmentID,
                 api,
+                apiProxy,
                 headers,
                 onChange,
                 cacheFlags,
@@ -354,6 +354,7 @@ const Flagsmith = class {
                 enableLogs,
                 enableAnalytics,
                 AsyncStorage,
+                getFlagWithProxy,
                 identity,
                 traits,
                 _trigger,
