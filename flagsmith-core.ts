@@ -29,6 +29,7 @@ let AsyncStorage: AsyncStorageType = null;
 const FLAGSMITH_KEY = "BULLET_TRAIN_DB";
 const FLAGSMITH_EVENT = "BULLET_TRAIN_EVENT";
 const defaultAPI = 'https://edge.api.flagsmith.com/api/v1/';
+const defaultAPIEdgeProxy = 'https://edge-proxy.api.flagsmith.com/api/v1/'
 // @ts-ignore
 import deepEqual from 'fast-deep-equal';
 let eventSource:typeof EventSource;
@@ -288,7 +289,7 @@ const Flagsmith = class {
     init({
         environmentID,
         api = defaultAPI,
-        apiProxy,
+        apiProxy = defaultAPIEdgeProxy,
         headers,
         onChange,
         cacheFlags,
@@ -303,7 +304,6 @@ const Flagsmith = class {
         eventSourceUrl= "https://realtime.flagsmith.com/",
         AsyncStorage: _AsyncStorage,
         identity,
-        getFlagWithProxy = false,
         traits,
         _trigger,
         state,
@@ -314,6 +314,7 @@ const Flagsmith = class {
         return new Promise((resolve, reject) => {
             this.environmentID = environmentID;
             this.api = api;
+            this.apiProxy = apiProxy;
             this.headers = headers;
             this.getFlagInterval = null;
             this.analyticsInterval = null;
