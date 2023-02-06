@@ -50,7 +50,7 @@ export interface IInitConfig<F extends string = string, T extends string = strin
     environmentID: string;
     headers?: object;
     identity?: string;
-    getFlagWithProxy?: boolean;
+    isFetchFlagsWithProxy?: boolean;
     traits?: ITraits<T>;
     onChange?: (previousFlags: IFlags<F> | null, params: IRetrieveInfo) => void;
     onError?: (err: Error) => void;
@@ -81,6 +81,10 @@ export interface IFlagsmith<F extends string = string, T extends string = string
      * Trigger a manual fetch of the environment features
      */
     getFlags: () => Promise<void>;
+     /**
+     * Trigger a manual fetch with api edge-proxy of the environment features
+     */
+    fetchFlagsWithProxy: (userId: string, traits?: Record<string, IFlagsmithValue>) => Promise<void>;
     /**
      * Returns the current flags
      */
