@@ -1,4 +1,4 @@
-name: Published Package
+name: Node.js Package
 
 on:
     release:
