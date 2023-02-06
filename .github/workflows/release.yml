@@ -26,16 +26,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Create Pull Request for Version Bump
-        uses: cloudposse/actions/github/create-pull-request@0.31.0
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          labels: |
-            release
-            automated pr
-          commit-message: "chore(release): [WEBS-000] automatic version bump for release ${{ steps.semantic.outputs.new_release_version }}"
-          title: "chore(release): [WEBS-000] automatic version bump for release ${{ steps.semantic.outputs.new_release_version }}"
-          body: |
-            This is an auto-generated PR which updates any changes upon version release.
-          branch: github-actions/auto-version-bump
