@@ -45,7 +45,6 @@ jobs:
 #                                    SEMANTIC RELEASE                                     #
 ###########################################################################################
 
-jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
