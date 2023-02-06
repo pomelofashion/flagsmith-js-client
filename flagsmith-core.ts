@@ -163,7 +163,7 @@ const Flagsmith = class {
             }
         };
 
-        if (identity) {
+        if (identity && !isFetchFlagsWithProxy) {
             return Promise.all([
                 this.withTraits ?
                 this.getJSON(api + 'identities/', "POST", JSON.stringify({
