@@ -96,11 +96,14 @@ const Flagsmith = class {
     };
 
     getFlags = (resolve?:(v?:any)=>any, reject?:(v?:any)=>any) => {
-        const { onChange, onError, identity, api } = this;
+        const { onChange, onError, identity, api, apiProxy } = this;
         let resolved = false;
         this.log("Get Flags")
 
         const handleResponse = ({ flags: features, traits }:IFlagsmithResponse) => {
+            if (identity) {
+                this.withTraits = null;
+            }
             // Handle server response
             let flags:IFlags = {};
             let userTraits: ITraits = {};
@@ -160,22 +163,22 @@ const Flagsmith = class {
             }
         };
 
-        if (identity && !this.getFlagWithProxy) {
+        if (identity) {
             return Promise.all([
                 this.withTraits ?
-                    this.getJSON(api + 'identities/', "POST", JSON.stringify({
-                        "identifier": identity,
-                        traits: Object.keys(this.withTraits).map((k)=>({
-                            "trait_key":k,
-                            "trait_value": this.withTraits![k]
-                        }))
+                this.getJSON(api + 'identities/', "POST", JSON.stringify({
+                    "identifier": identity,
+                    traits: Object.keys(this.withTraits).map((k)=>({
+                        "trait_key":k,
+                        "trait_value": this.withTraits![k]
                     }))
-                :
-                    this.getJSON(api + 'identities/?identifier=' + encodeURIComponent(identity)),
+                }))
+            :
+                this.getJSON(api + 'identities/?identifier=' + encodeURIComponent(identity)),
             ])
                 .then((res) => {
+                    this.withTraits = null
                     handleResponse(res[0] as IFlagsmithResponse)
-                    this.getFlagWithProxy = true
 
                     if (resolve && !resolved) {
                         resolved = true;
@@ -184,25 +187,6 @@ const Flagsmith = class {
                 }).catch(({ message }) => {
                     onError && onError({ message })
                 });
-        } else if (this.getFlagWithProxy) {
-            return Promise.all([
-                this.getJSON(this.apiProxy + 'identities/', "POST", JSON.stringify({
-                    "identifier": identity,
-                    traits: Object.keys(!!this.withTraits).map((k)=>({
-                        "trait_key":k,
-                        "trait_value": this.withTraits![k]
-                    }))
-                }))
-            ])
-            .then((res) => {
-                handleResponse(res[0] as IFlagsmithResponse)
-                if (resolve && !resolved) {
-                    resolved = true;
-                    resolve();
-                }
-            }).catch(({ message }) => {
-                onError && onError({ message })
-            });
         } else {
             return Promise.all([
                 this.getJSON(api + "flags/")
@@ -268,7 +252,6 @@ const Flagsmith = class {
     onError:IInitConfig['onError']|null = null
     trigger?:(()=>void)|null= null
     identity?: string|null= null
-    getFlagWithProxy= false
     ticks: number|null= null
     timer: number|null= null
     traits:ITraits|null= null
@@ -278,6 +261,7 @@ const Flagsmith = class {
     init({
         environmentID,
         api = defaultAPI,
+        apiProxy,
         headers,
         onChange,
         cacheFlags,
@@ -345,6 +329,7 @@ const Flagsmith = class {
             this.log("Initialising with properties",{
                 environmentID,
                 api,
+                apiProxy,
                 headers,
                 onChange,
                 cacheFlags,
