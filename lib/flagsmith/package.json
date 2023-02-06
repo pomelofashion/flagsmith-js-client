@@ -1,11 +1,11 @@
 {
   "name": "@pomelofashion/flagsmith-js-client",
-  "version": "v1.0.3",
+  "version": "v1.0.4",
   "description": "Feature flagging to support continuous development",
   "main": "./index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pomelofashion/www.git"
+    "url": "https://github.com/pomelofashion/flagsmith-js-client"
   },
   "keywords": [
     "feature flagger",
