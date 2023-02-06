@@ -1,5 +1,5 @@
 {
-  "name": "@pomelofashion/www",
+  "name": "@pomelofashion/flagsmith-js-client",
   "description": "Feature flagging to support continuous development",
   "main": "./flagsmith/index.js",
   "scripts": {
