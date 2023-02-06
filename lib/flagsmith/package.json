@@ -1,6 +1,6 @@
 {
   "name": "@pomelofashion/flagsmith-js-client",
-  "version": "v3.1.0",
+  "version": "v3.1.1",
   "description": "Feature flagging to support continuous development",
   "main": "./index.js",
   "repository": {
