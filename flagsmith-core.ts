@@ -173,7 +173,6 @@ const Flagsmith = class {
                         "trait_key":k,
                         "trait_value": this.withTraits![k]
                     })),
-                    "isFetchFlagsWithProxy": isFetchFlagsWithProxy ? true : false,
                 }))
             :
                 this.getJSON(api + 'identities/?identifier=' + encodeURIComponent(identity)),
@@ -192,17 +191,13 @@ const Flagsmith = class {
                 });
         } else if (identity && isFetchFlagsWithProxy) {
             return Promise.all([
-                this.withTraits ?
                 this.getJSON(apiProxy + 'identities/', "POST", JSON.stringify({
                     "identifier": identity,
-                    traits: Object.keys(this.withTraits).map((k)=>({
+                    traits: Object.keys(!!this.withTraits).map((k)=>({
                         "trait_key":k,
                         "trait_value": this.withTraits![k]
                     })),
-                    "isFetchFlagsWithProxy": isFetchFlagsWithProxy ? true : false,
                 }))
-            :
-                this.getJSON(apiProxy + 'identities/?demo'),
             ])
                 .then((res) => {
                     handleResponse(res[0] as IFlagsmithResponse)
@@ -368,7 +363,6 @@ const Flagsmith = class {
                 enableLogs,
                 enableAnalytics,
                 AsyncStorage,
-                getFlagWithProxy,
                 identity,
                 traits,
                 _trigger,
@@ -489,7 +483,9 @@ const Flagsmith = class {
                             try {
                                 var json = JSON.parse(res);
                                 let cachePopulated = false;
-                                if (json && json.api === this.api && json.environmentID === this.environmentID) {
+                                const isAPIValid = json?.api === this.api
+                                const isEnvValid = json?.environmentID === this.environmentID
+                                if (isAPIValid && isEnvValid) {
                                     let setState = true;
                                     if(this.identity && (json.identity!==this.identity)) {
                                         this.log("Ignoring cache,  identity has changed from " + json.identity + " to " + this.identity )
