@@ -102,9 +102,6 @@ const Flagsmith = class {
         this.log("Get Flags")
 
         const handleResponse = ({ flags: features, traits }:IFlagsmithResponse) => {
-            if (identity) {
-                this.withTraits = null;
-            }
             // Handle server response
             let flags:IFlags = {};
             let userTraits: ITraits = {};
@@ -179,7 +176,6 @@ const Flagsmith = class {
 
             ])
                 .then((res) => {
-                    this.withTraits = null
                     handleResponse(res[0] as IFlagsmithResponse)
 
                     if (resolve && !resolved) {
@@ -193,7 +189,7 @@ const Flagsmith = class {
             return Promise.all([
                 this.getJSON(apiProxy + 'identities/', "POST", JSON.stringify({
                     "identifier": identity,
-                    traits: Object.keys(!!this.withTraits).map((k)=>({
+                    traits: Object.keys(this.withTraits!).map((k)=>({
                         "trait_key":k,
                         "trait_value": this.withTraits![k]
                     })),
